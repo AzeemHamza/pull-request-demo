@@ -1,32 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './App.css';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import PrivateRoute from './components/PrivateRoute';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
 
 function App() {
-  const [items, setItems] = useState([]);
-  const [input, setInput] = useState('');
-
-  const fetchItems = async () => {
-    const res = await axios.get('/api/items');
-    setItems(res.data);
-  };
-
-  useEffect(() => { fetchItems(); }, []);
-
-  const addItem = async () => {
-    if (!input) return;
-    await axios.post('/api/items', { name: input });
-    setInput('');
-    fetchItems();
-  };
-
   return (
-    <div className="App">
-      <h1>Todo List</h1>
-      <input value={input} onChange={e => setInput(e.target.value)} placeholder="Enter item" />
-      <button onClick={addItem}>Add</button>
-      <ul>{items.map((item, i) => <li key={i}>{item.name}</li>)}</ul>
-    </div>
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+      </Routes>
+    </>
   );
 }
 
